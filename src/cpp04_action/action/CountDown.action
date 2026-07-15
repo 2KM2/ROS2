@@ -1,0 +1,11 @@
+# Action: 倒计时任务
+# 格式：目标 / 反馈 / 结果，用 --- 分隔
+
+# Goal（目标）：从几开始倒计时
+int32 countdown_from
+---
+# Result（最终结果）：任务完成后的消息
+string finish_message
+---
+# Feedback（实时反馈）：当前倒计时数值
+int32 current_count
