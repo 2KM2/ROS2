@@ -24,15 +24,14 @@ def generate_launch_description():
     rviz = Node(
         package='rviz2',
         executable='rviz2',
-        arguments=['-d', os.path.join(this_pkg, 'rviz', 'sim.rviz')],
-        condition=IfCondition(LaunchConfiguration('rviz'))
+        arguments=['-d', os.path.join(this_pkg, 'rviz', 'sim.rviz')]
         )
     # Bridge
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        arguments=['/model/vehicle_blue/cmd_vel@geometry_msgs/msg/Twist@]gz.msgs.Twist',
-                    '/model/vehicle_blue/odometry@nav_msgs/msg/Odometry@[gz.msgs.Odometry',
+        arguments=['/model/vehicle_blue/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
+                    '/model/vehicle_blue/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry',
                     '/model/vehicle_blue/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
                     ],
         parameters=[{'qos_overrides./model/vehicle_blue.subscriber.reliability': 'reliable'}],
