@@ -8,7 +8,7 @@ from launch.actions import (
     IncludeLaunchDescription,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 
 
 def generate_launch_description():
@@ -19,6 +19,7 @@ def generate_launch_description():
     default_world = os.path.join(package_share, 'world', 'house.sdf')
     world = LaunchConfiguration('world')
     verbosity = LaunchConfiguration('verbosity')
+    headless = LaunchConfiguration('headless')
 
     declare_world = DeclareLaunchArgument(
         'world',
@@ -30,6 +31,11 @@ def generate_launch_description():
         default_value='4',
         description='Gazebo Sim console verbosity (0-4)',
     )
+    declare_headless = DeclareLaunchArgument(
+        'headless',
+        default_value='false',
+        description='Run the Gazebo server without its GUI',
+    )
     model_resource_path = AppendEnvironmentVariable(
         'GZ_SIM_RESOURCE_PATH',
         os.path.join(package_share, 'models'),
@@ -40,13 +46,21 @@ def generate_launch_description():
             os.path.join(ros_gz_sim_share, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            'gz_args': ['-r -v ', verbosity, ' ', world],
+            'gz_args': [
+                PythonExpression([
+                    "'-s --headless-rendering ' if '",
+                    headless,
+                    "' == 'true' else ''",
+                ]),
+                '-r -v ', verbosity, ' ', world,
+            ],
         }.items(),
     )
 
     return LaunchDescription([
         declare_world,
         declare_verbosity,
+        declare_headless,
         model_resource_path,
         gazebo,
     ])
