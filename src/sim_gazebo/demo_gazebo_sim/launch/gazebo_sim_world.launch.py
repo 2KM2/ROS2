@@ -2,7 +2,11 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (
+    AppendEnvironmentVariable,
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
@@ -26,6 +30,10 @@ def generate_launch_description():
         default_value='4',
         description='Gazebo Sim console verbosity (0-4)',
     )
+    model_resource_path = AppendEnvironmentVariable(
+        'GZ_SIM_RESOURCE_PATH',
+        os.path.join(package_share, 'models'),
+    )
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -39,5 +47,6 @@ def generate_launch_description():
     return LaunchDescription([
         declare_world,
         declare_verbosity,
+        model_resource_path,
         gazebo,
     ])

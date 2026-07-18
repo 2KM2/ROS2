@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <model name="NormalBed">
+        <link name="body">
+            <pose>0 0 0 0 0 0</pose>
+            <visual name="visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/bed.obj</uri>
+                        <scale>1 1 1</scale>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="collision">
+                <pose>0.00833 0.00009 0.3225 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>2.01666 1.03519 0.645</size>
+                    </box>
+                </geometry>
+            </collision>
+        </link>
+    </model>
+</sdf>

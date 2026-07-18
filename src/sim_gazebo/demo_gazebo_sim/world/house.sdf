@@ -169,6 +169,92 @@
       </link>
     </model>
 
+    <!--
+      Furniture layout for cleaning-robot navigation and coverage tests.
+      The central strip from the south entrance remains unobstructed.
+      All model origins are raised to z=0.1, the top of the finished floor.
+    -->
+
+    <!-- Living area: large obstacles and cleanable gaps. -->
+    <include>
+      <uri>model://sofa</uri>
+      <name>living_room_sofa</name>
+      <pose>-4.35 -2.2 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://coffeetable</uri>
+      <name>living_room_coffee_table</name>
+      <pose>-2.65 -2.2 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>living_room_bookshelf</name>
+      <pose>-3.4 4.95 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <!-- Dining area: chair legs provide small, closely spaced obstacles. -->
+    <include>
+      <uri>model://table</uri>
+      <name>dining_table</name>
+      <pose>1.2 2.4 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://chair</uri>
+      <name>dining_chair_south</name>
+      <pose>1.2 1.35 0.1 0 0 1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://chair</uri>
+      <name>dining_chair_north</name>
+      <pose>1.2 3.45 0.1 0 0 -1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://chair</uri>
+      <name>dining_chair_west</name>
+      <pose>0.1 2.4 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://chair</uri>
+      <name>dining_chair_east</name>
+      <pose>2.3 2.4 0.1 0 0 3.14159</pose>
+      <static>true</static>
+    </include>
+
+    <!-- Bedroom area: low furniture and wall-following clearance. -->
+    <include>
+      <uri>model://normalbed</uri>
+      <name>bedroom_bed</name>
+      <pose>3.6 -3.75 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <!-- Kitchen area: an L-shaped cluster plus a freestanding bin. -->
+    <include>
+      <uri>model://kitchencountertop</uri>
+      <name>kitchen_countertop</name>
+      <pose>4.5 2.6 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://refrigerator</uri>
+      <name>kitchen_refrigerator</name>
+      <pose>4.45 4.35 0.1 0 0 0</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://trashbin</uri>
+      <name>kitchen_trash_bin</name>
+      <pose>3.55 3.75 0.1 0 0 -0.35</pose>
+      <static>true</static>
+    </include>
+
     <light name="sun" type="directional">
       <pose>0 0 10 0 0 0</pose>
       <cast_shadows>true</cast_shadows>

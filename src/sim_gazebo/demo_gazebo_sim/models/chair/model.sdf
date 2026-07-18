@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <model name="Chair">
+        <link name="body">
+            <pose>0 0 0 0 0 1.5708</pose>
+            <visual name="visual">
+                <geometry>
+                    <mesh>
+                        <uri>meshes/Chair.obj</uri>
+                        <scale>0.00817 0.00817 0.00817</scale>
+                    </mesh>
+                </geometry>
+            </visual>
+            <collision name="seat">
+                <pose>0 0.041 0.43 0 0 0</pose>
+                <geometry>
+                    <box><size>0.579 0.513 0.08</size></box>
+                </geometry>
+            </collision>
+            <collision name="backrest">
+                <pose>0 0.257 0.635 0 0 0</pose>
+                <geometry><box><size>0.579 0.08 0.365</size></box></geometry>
+            </collision>
+            <collision name="front_left_leg">
+                <pose>0.24 -0.16 0.195 0 0 0</pose>
+                <geometry><box><size>0.05 0.05 0.39</size></box></geometry>
+            </collision>
+            <collision name="front_right_leg">
+                <pose>-0.24 -0.16 0.195 0 0 0</pose>
+                <geometry><box><size>0.05 0.05 0.39</size></box></geometry>
+            </collision>
+            <collision name="back_left_leg">
+                <pose>0.24 0.24 0.195 0 0 0</pose>
+                <geometry><box><size>0.05 0.05 0.39</size></box></geometry>
+            </collision>
+            <collision name="back_right_leg">
+                <pose>-0.24 0.24 0.195 0 0 0</pose>
+                <geometry><box><size>0.05 0.05 0.39</size></box></geometry>
+            </collision>
+        </link>
+    </model>
+</sdf>
