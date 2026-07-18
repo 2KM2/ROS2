@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<sdf version="1.10">
+  <world name="house_100sqm">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <plugin name="gz::sim::systems::Physics" filename="gz-sim-physics-system"/>
+    <plugin name="gz::sim::systems::UserCommands" filename="gz-sim-user-commands-system"/>
+    <plugin name="gz::sim::systems::SceneBroadcaster" filename="gz-sim-scene-broadcaster-system"/>
+    <plugin name="gz::sim::systems::Contact" filename="gz-sim-contact-system"/>
+
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>5.5645e-06 2.28758e-05 -4.23884e-05</magnetic_field>
+    <atmosphere type="adiabatic"/>
+
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <!-- Surrounding terrain. -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.35 0.35 0.35 1</ambient>
+            <diffuse>0.45 0.45 0.45 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!--
+      100 m^2 house shell:
+        clear inside dimensions: 10 m x 10 m
+        wall thickness:          0.2 m
+        wall height:             2.8 m
+        entrance opening:        1.2 m x 2.3 m
+    -->
+    <model name="house_100sqm">
+      <static>true</static>
+
+      <!-- The finished floor occupies exactly 10 m x 10 m. -->
+      <link name="floor">
+        <pose>0 0 0.05 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>10 10 0.1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>10 10 0.1</size></box></geometry>
+          <material>
+            <ambient>0.65 0.52 0.36 1</ambient>
+            <diffuse>0.76 0.62 0.43 1</diffuse>
+            <specular>0.12 0.12 0.12 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- North wall. Its extra 0.4 m closes both outside corners. -->
+      <link name="north_wall">
+        <pose>0 5.1 1.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>10.4 0.2 2.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>10.4 0.2 2.8</size></box></geometry>
+          <material>
+            <ambient>0.75 0.75 0.72 1</ambient>
+            <diffuse>0.9 0.9 0.86 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <link name="west_wall">
+        <pose>-5.1 0 1.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+          <material>
+            <ambient>0.75 0.75 0.72 1</ambient>
+            <diffuse>0.9 0.9 0.86 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <link name="east_wall">
+        <pose>5.1 0 1.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+          <material>
+            <ambient>0.75 0.75 0.72 1</ambient>
+            <diffuse>0.9 0.9 0.86 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- South wall is split to leave a centered 1.2 m entrance. -->
+      <link name="south_wall_left">
+        <pose>-2.8 -5.1 1.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+          <material>
+            <ambient>0.75 0.75 0.72 1</ambient>
+            <diffuse>0.9 0.9 0.86 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <link name="south_wall_right">
+        <pose>2.8 -5.1 1.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+          <material>
+            <ambient>0.75 0.75 0.72 1</ambient>
+            <diffuse>0.9 0.9 0.86 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <link name="entrance_lintel">
+        <pose>0 -5.1 2.55 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>1.2 0.2 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.2 0.2 0.5</size></box></geometry>
+          <material>
+            <ambient>0.75 0.75 0.72 1</ambient>
+            <diffuse>0.9 0.9 0.86 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <light name="sun" type="directional">
+      <pose>0 0 10 0 0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1</intensity>
+      <direction>-0.5 0.1 -0.9</direction>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <linear>0.01</linear>
+        <constant>0.9</constant>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+    </light>
+  </world>
+</sdf>
