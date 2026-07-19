@@ -85,13 +85,15 @@ def generate_launch_description():
             '[gz.msgs.PointCloudPacked',
             '/smartcar/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
             '/smartcar/camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/smartcar/camera/image/camera_info@sensor_msgs/msg/CameraInfo'
+            '/smartcar/camera/camera_info@sensor_msgs/msg/CameraInfo'
             '[gz.msgs.CameraInfo',
         ],
         remappings=[
             ('/smartcar/tf', '/tf'),
             ('/smartcar/joint_states', '/joint_states'),
             ('/smartcar/cmd_vel', '/cmd_vel'),
+            ('/smartcar/camera/camera_info',
+             '/smartcar/camera/image/camera_info'),
         ],
         parameters=[{
             'qos_overrides./smartcar/scan.publisher.reliability':
