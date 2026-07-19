@@ -37,6 +37,11 @@
                 <pose>-0.24 0.24 0.195 0 0 0</pose>
                 <geometry><box><size>0.05 0.05 0.39</size></box></geometry>
             </collision>
+            <!-- Keep the small robot from passing between the legs. -->
+            <collision name="navigation_footprint">
+                <pose>0 0.04 0.43 0 0 0</pose>
+                <geometry><box><size>0.579 0.513 0.86</size></box></geometry>
+            </collision>
         </link>
     </model>
 </sdf>

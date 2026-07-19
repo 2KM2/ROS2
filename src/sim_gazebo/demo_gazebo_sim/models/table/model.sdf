@@ -123,6 +123,11 @@
                     </cylinder>
                 </geometry>
             </collision>
+            <!-- Keep the small robot from passing between the legs. -->
+            <collision name="navigation_footprint">
+                <pose>0 0 0.5075 0 0 0</pose>
+                <geometry><box><size>1.5 0.8 1.015</size></box></geometry>
+            </collision>
             <visual name="back_left_leg">
                 <pose>-0.68 0.38 0.5 0 0 0</pose>
                 <geometry>
