@@ -121,6 +121,19 @@ def generate_launch_description():
         output='screen',
     )
 
+    imu_frame = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '--x', '0', '--y', '0', '--z', '0',
+            '--roll', '0', '--pitch', '0', '--yaw', '0',
+            '--frame-id', 'imu_link',
+            '--child-frame-id', 'smartcar/imu_link/imu_sensor',
+        ],
+        parameters=[{'use_sim_time': True}],
+        output='screen',
+    )
+
     rviz = Node(
         package='rviz2',
         executable='rviz2',
@@ -150,6 +163,7 @@ def generate_launch_description():
         state_publisher,
         bridge,
         lidar_frame,
+        imu_frame,
         spawn,
         rviz,
     ])
