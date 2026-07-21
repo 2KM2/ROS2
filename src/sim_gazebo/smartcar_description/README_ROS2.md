@@ -1,12 +1,11 @@
 # smartcar_description ROS 2 migration
 
-This package uses an Ackermann layout because the original vehicle has two
-front steering joints and two driven rear wheels. The Gazebo Harmonic plugin
-drives only the rear wheel joints and commands the two front steering joints;
-the model is not configured as a differential or skid-steer base. The legacy
-ROS 1 rosbuild, Gazebo Classic, arbotix, and controller files remain in their
-original subdirectories for reference, but they are not installed by the ROS 2
-build.
+This package models a four-wheel-drive skid-steer smart mower. The two wheels
+on each side are driven at the same speed. The Gazebo Harmonic `DiffDrive`
+system uses the left/right speed difference to turn, including an in-place turn
+when the two sides move in opposite directions. The model uses a 1.000 m wheelbase, a 0.370 m track width, 400 mm diameter
+wheels, and a 600 mm cutter disc. The estimated overall dimensions are
+1400 x 434 x 500 mm. The legacy ROS 1 files remain for reference but are not installed by the ROS 2 build.
 
 ## Build
 
@@ -21,12 +20,20 @@ source install/setup.bash
 ros2 launch smartcar_description smartcar_sim.launch.py
 ```
 
-Drive the vehicle with a Twist command. Linear X is vehicle speed and angular
-Z is the requested yaw rate:
+Drive the vehicle with a Twist command. `linear.x` is forward speed and
+`angular.z` is the requested yaw rate. Setting `linear.x` to zero and
+`angular.z` to a nonzero value turns the mower in place:
 
 ```bash
 ros2 topic pub /smartcar/cmd_vel geometry_msgs/msg/Twist \
   "{linear: {x: 0.3}, angular: {z: 0.5}}" -r 10
+```
+
+In-place left turn:
+
+```bash
+ros2 topic pub /smartcar/cmd_vel geometry_msgs/msg/Twist \
+  "{linear: {x: 0.0}, angular: {z: 0.8}}" -r 10
 ```
 
 Main ROS topics:

@@ -4,7 +4,7 @@
 <package format="3">
   <name>smartcar_description</name>
   <version>1.0.0</version>
-  <description>ROS 2 Ackermann smart car model for Gazebo Harmonic.</description>
+  <description>ROS 2 four-wheel-drive skid-steer smart mower model for Gazebo Harmonic.</description>
   <maintainer email="1017843797@qq.com">zkm</maintainer>
   <license>BSD-3-Clause</license>
 

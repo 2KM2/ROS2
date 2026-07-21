@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
 <robot name="smartcar" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:property name="M_PI" value="3.141592653589793"/>
-  <xacro:property name="wheel_radius" value="0.025"/>
+  <!-- Physical dimensions of the four-wheel-drive mower chassis (metres). -->
+  <xacro:property name="wheel_radius" value="0.200"/>
   <xacro:property name="wheel_width" value="0.020"/>
-  <xacro:property name="wheel_base" value="0.160"/>
-  <xacro:property name="wheel_separation" value="0.160"/>
+  <xacro:property name="wheel_base" value="1.000"/>
+  <!-- Rear track width has not been provided; use the measured front track. -->
+  <xacro:property name="wheel_separation" value="0.370"/>
+  <xacro:property name="body_length" value="1.000"/>
+  <xacro:property name="body_width" value="0.350"/>
+  <xacro:property name="body_height" value="0.300"/>
+  <!-- The blue shell spans z=0.200..0.500 m; wheels remain exposed. -->
 
   <material name="smartcar_blue">
     <color rgba="0.05 0.20 0.80 1"/>
@@ -58,19 +64,47 @@
   <link name="base_footprint"/>
 
   <link name="base_link">
-    <xacro:box_inertia mass="1.40" x="0.25" y="0.16" z="0.04"/>
+    <inertial>
+      <origin xyz="0 0 0.295" rpy="0 0 0"/>
+      <mass value="1.40"/>
+      <inertia ixx="0.02479167" ixy="0" ixz="0"
+        iyy="0.12716667" iyz="0" izz="0.13095833"/>
+    </inertial>
     <visual>
+      <origin xyz="0 0 0.295" rpy="0 0 0"/>
       <geometry>
-        <box size="0.25 0.16 0.04"/>
+        <box size="1.000 0.350 0.300"/>
       </geometry>
       <material name="smartcar_blue"/>
     </visual>
     <collision>
+      <origin xyz="0 0 0.295" rpy="0 0 0"/>
       <geometry>
-        <box size="0.25 0.16 0.04"/>
+        <box size="1.000 0.350 0.300"/>
       </geometry>
     </collision>
   </link>
+
+  <!-- 600 mm cutter disc fitted exactly between the two wheel axles. -->
+  <link name="cutter_deck_link">
+    <inertial>
+      <mass value="2.00"/>
+      <inertia ixx="0.04526667" ixy="0" ixz="0"
+        iyy="0.04526667" iyz="0" izz="0.09000000"/>
+    </inertial>
+    <visual>
+      <geometry><cylinder radius="0.300" length="0.040"/></geometry>
+      <material name="smartcar_black"/>
+    </visual>
+    <collision>
+      <geometry><cylinder radius="0.300" length="0.040"/></geometry>
+    </collision>
+  </link>
+  <joint name="cutter_deck_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="cutter_deck_link"/>
+    <origin xyz="0 0 -0.005" rpy="0 0 0"/>
+  </joint>
 
   <joint name="base_footprint_joint" type="fixed">
     <parent link="base_footprint"/>
@@ -82,7 +116,7 @@
   <joint name="rear_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_left_wheel_link"/>
-    <origin xyz="-0.08 0.08 -0.03" rpy="0 0 0"/>
+    <origin xyz="-0.500 0.185 0.145" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.02" friction="0.01"/>
   </joint>
@@ -91,7 +125,7 @@
   <joint name="rear_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_right_wheel_link"/>
-    <origin xyz="-0.08 -0.08 -0.03" rpy="0 0 0"/>
+    <origin xyz="-0.500 -0.185 0.145" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.02" friction="0.01"/>
   </joint>
@@ -106,13 +140,11 @@
       <geometry><box size="0.02 0.02 0.04"/></geometry>
     </collision>
   </link>
-  <joint name="front_left_steering_joint" type="revolute">
+  <!-- Four-wheel skid-steer chassis: keep the front wheel carriers aligned. -->
+  <joint name="front_left_steering_joint" type="fixed">
     <parent link="base_link"/>
     <child link="front_left_steering_link"/>
-    <origin xyz="0.08 0.08 -0.03" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <limit lower="-0.60" upper="0.60" effort="5.0" velocity="4.0"/>
-    <dynamics damping="0.10" friction="0.02"/>
+    <origin xyz="0.500 0.185 0.145" rpy="0 0 0"/>
   </joint>
 
   <xacro:wheel_link name="front_left_wheel_link"/>
@@ -133,13 +165,10 @@
       <geometry><box size="0.02 0.02 0.04"/></geometry>
     </collision>
   </link>
-  <joint name="front_right_steering_joint" type="revolute">
+  <joint name="front_right_steering_joint" type="fixed">
     <parent link="base_link"/>
     <child link="front_right_steering_link"/>
-    <origin xyz="0.08 -0.08 -0.03" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <limit lower="-0.60" upper="0.60" effort="5.0" velocity="4.0"/>
-    <dynamics damping="0.10" friction="0.02"/>
+    <origin xyz="0.500 -0.185 0.145" rpy="0 0 0"/>
   </joint>
 
   <xacro:wheel_link name="front_right_wheel_link"/>
@@ -163,7 +192,7 @@
   <joint name="sensor_deck_joint" type="fixed">
     <parent link="base_link"/>
     <child link="sensor_deck_link"/>
-    <origin xyz="0 0 0.055" rpy="0 0 0"/>
+    <origin xyz="0.430 0 0.450" rpy="0 0 0"/>
   </joint>
 
   <link name="lidar_link">
@@ -185,7 +214,7 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz="0 0 0.10" rpy="0 0 0"/>
+    <origin xyz="0.530 0 0.495" rpy="0 0.191986 0"/>
   </joint>
 
   <link name="camera_link">
@@ -201,7 +230,7 @@
   <joint name="camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="camera_link"/>
-    <origin xyz="0.11 0 0.08" rpy="0 0 0"/>
+    <origin xyz="0.530 0 0.345" rpy="0 0 0"/>
   </joint>
 
   <link name="imu_link">
@@ -223,10 +252,31 @@
   <gazebo reference="base_link"><material>Gazebo/Blue</material></gazebo>
   <gazebo reference="front_left_steering_link"><material>Gazebo/Red</material></gazebo>
   <gazebo reference="front_right_steering_link"><material>Gazebo/Red</material></gazebo>
-  <gazebo reference="rear_left_wheel_link"><material>Gazebo/Black</material></gazebo>
-  <gazebo reference="rear_right_wheel_link"><material>Gazebo/Black</material></gazebo>
-  <gazebo reference="front_left_wheel_link"><material>Gazebo/Black</material></gazebo>
-  <gazebo reference="front_right_wheel_link"><material>Gazebo/Black</material></gazebo>
+  <!-- Skid-steer tyre: high rolling traction and low lateral resistance. -->
+  <gazebo reference="rear_left_wheel_link">
+    <material>Gazebo/Black</material>
+    <mu1>1.0</mu1>
+    <mu2>0.08</mu2>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+  <gazebo reference="rear_right_wheel_link">
+    <material>Gazebo/Black</material>
+    <mu1>1.0</mu1>
+    <mu2>0.08</mu2>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+  <gazebo reference="front_left_wheel_link">
+    <material>Gazebo/Black</material>
+    <mu1>1.0</mu1>
+    <mu2>0.08</mu2>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+  <gazebo reference="front_right_wheel_link">
+    <material>Gazebo/Black</material>
+    <mu1>1.0</mu1>
+    <mu2>0.08</mu2>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
   <gazebo reference="lidar_link"><material>Gazebo/Black</material></gazebo>
 
   <gazebo reference="lidar_link">
@@ -304,15 +354,13 @@
 
   <gazebo>
     <plugin
-      filename="gz-sim-ackermann-steering-system"
-      name="gz::sim::systems::AckermannSteering">
+      filename="gz-sim-diff-drive-system"
+      name="gz::sim::systems::DiffDrive">
+      <!-- Each side has two driven wheels, enabling skid-steer turns. -->
       <left_joint>rear_left_wheel_joint</left_joint>
+      <left_joint>front_left_wheel_joint</left_joint>
       <right_joint>rear_right_wheel_joint</right_joint>
-      <left_steering_joint>front_left_steering_joint</left_steering_joint>
-      <right_steering_joint>front_right_steering_joint</right_steering_joint>
-      <kingpin_width>${wheel_separation}</kingpin_width>
-      <steering_limit>0.60</steering_limit>
-      <wheel_base>${wheel_base}</wheel_base>
+      <right_joint>front_right_wheel_joint</right_joint>
       <wheel_separation>${wheel_separation}</wheel_separation>
       <wheel_radius>${wheel_radius}</wheel_radius>
       <topic>/smartcar/cmd_vel</topic>
@@ -323,8 +371,8 @@
       <odom_publish_frequency>30</odom_publish_frequency>
       <min_velocity>-0.8</min_velocity>
       <max_velocity>0.8</max_velocity>
-      <min_acceleration>-2.0</min_acceleration>
-      <max_acceleration>2.0</max_acceleration>
+      <min_acceleration>-1.0</min_acceleration>
+      <max_acceleration>1.0</max_acceleration>
     </plugin>
     <plugin
       filename="gz-sim-joint-state-publisher-system"
@@ -334,8 +382,6 @@
       <joint_name>rear_right_wheel_joint</joint_name>
       <joint_name>front_left_wheel_joint</joint_name>
       <joint_name>front_right_wheel_joint</joint_name>
-      <joint_name>front_left_steering_joint</joint_name>
-      <joint_name>front_right_steering_joint</joint_name>
     </plugin>
   </gazebo>
 </robot>
