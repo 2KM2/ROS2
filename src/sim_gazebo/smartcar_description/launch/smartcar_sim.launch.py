@@ -57,7 +57,7 @@ def generate_launch_description():
                 package='ros_gz_sim',
                 executable='create',
                 arguments=[
-                    '-world', 'house_100sqm',
+                    '-world', 'mowing_field_5000sqm',
                     '-topic', '/robot_description',
                     '-name', 'smartcar',
                     '-allow_renaming', 'false',

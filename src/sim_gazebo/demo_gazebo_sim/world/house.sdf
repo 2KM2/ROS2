@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.10">
-  <world name="house_100sqm">
+  <world name="mowing_field_5000sqm">
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1</real_time_factor>
@@ -56,26 +56,25 @@
     </model>
 
     <!--
-      100 m^2 house shell:
-        clear inside dimensions: 10 m x 10 m
-        wall thickness:          0.2 m
-        wall height:             2.8 m
-        entrance opening:        1.2 m x 2.3 m
+      5000 m^2 mowing field:
+        clear inside dimensions: 100 m x 50 m
+        area: 5000 m^2
+        boundary height: 0.8 m
     -->
-    <model name="house_100sqm">
+    <model name="mowing_field_5000sqm">
       <static>true</static>
 
-      <!-- The finished floor occupies exactly 10 m x 10 m. -->
+      <!-- The finished floor occupies exactly 100 m x 50 m. -->
       <link name="floor">
         <pose>0 0 0.05 0 0 0</pose>
         <collision name="collision">
-          <geometry><box><size>10 10 0.1</size></box></geometry>
+          <geometry><box><size>100 50 0.1</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>10 10 0.1</size></box></geometry>
+          <geometry><box><size>100 50 0.1</size></box></geometry>
           <material>
-            <ambient>0.65 0.52 0.36 1</ambient>
-            <diffuse>0.76 0.62 0.43 1</diffuse>
+            <ambient>0.12 0.35 0.08 1</ambient>
+            <diffuse>0.18 0.55 0.12 1</diffuse>
             <specular>0.12 0.12 0.12 1</specular>
           </material>
         </visual>
@@ -83,12 +82,12 @@
 
       <!-- North wall. Its extra 0.4 m closes both outside corners. -->
       <link name="north_wall">
-        <pose>0 5.1 1.4 0 0 0</pose>
+        <pose>0 25.1 0.4 0 0 0</pose>
         <collision name="collision">
-          <geometry><box><size>10.4 0.2 2.8</size></box></geometry>
+          <geometry><box><size>100.4 0.2 0.8</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>10.4 0.2 2.8</size></box></geometry>
+          <geometry><box><size>100.4 0.2 0.8</size></box></geometry>
           <material>
             <ambient>0.75 0.75 0.72 1</ambient>
             <diffuse>0.9 0.9 0.86 1</diffuse>
@@ -98,12 +97,12 @@
       </link>
 
       <link name="west_wall">
-        <pose>-5.1 0 1.4 0 0 0</pose>
+        <pose>-50.1 0 0.4 0 0 0</pose>
         <collision name="collision">
-          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+          <geometry><box><size>0.2 50 0.8</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+          <geometry><box><size>0.2 50 0.8</size></box></geometry>
           <material>
             <ambient>0.75 0.75 0.72 1</ambient>
             <diffuse>0.9 0.9 0.86 1</diffuse>
@@ -113,12 +112,12 @@
       </link>
 
       <link name="east_wall">
-        <pose>5.1 0 1.4 0 0 0</pose>
+        <pose>50.1 0 0.4 0 0 0</pose>
         <collision name="collision">
-          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+          <geometry><box><size>0.2 50 0.8</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>0.2 10 2.8</size></box></geometry>
+          <geometry><box><size>0.2 50 0.8</size></box></geometry>
           <material>
             <ambient>0.75 0.75 0.72 1</ambient>
             <diffuse>0.9 0.9 0.86 1</diffuse>
@@ -127,14 +126,14 @@
         </visual>
       </link>
 
-      <!-- South wall is split to leave a centered 1.2 m entrance. -->
+      <!-- South boundary is split to leave a centered 4 m entrance. -->
       <link name="south_wall_left">
-        <pose>-2.8 -5.1 1.4 0 0 0</pose>
+        <pose>-26.0 -25.1 0.4 0 0 0</pose>
         <collision name="collision">
-          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+          <geometry><box><size>48 0.2 0.8</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+          <geometry><box><size>48 0.2 0.8</size></box></geometry>
           <material>
             <ambient>0.75 0.75 0.72 1</ambient>
             <diffuse>0.9 0.9 0.86 1</diffuse>
@@ -144,12 +143,12 @@
       </link>
 
       <link name="south_wall_right">
-        <pose>2.8 -5.1 1.4 0 0 0</pose>
+        <pose>26.0 -25.1 0.4 0 0 0</pose>
         <collision name="collision">
-          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+          <geometry><box><size>48 0.2 0.8</size></box></geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>4.4 0.2 2.8</size></box></geometry>
+          <geometry><box><size>48 0.2 0.8</size></box></geometry>
           <material>
             <ambient>0.75 0.75 0.72 1</ambient>
             <diffuse>0.9 0.9 0.86 1</diffuse>
@@ -158,107 +157,10 @@
         </visual>
       </link>
 
-      <link name="entrance_lintel">
-        <pose>0 -5.1 2.55 0 0 0</pose>
-        <collision name="collision">
-          <geometry><box><size>1.2 0.2 0.5</size></box></geometry>
-        </collision>
-        <visual name="visual">
-          <geometry><box><size>1.2 0.2 0.5</size></box></geometry>
-          <material>
-            <ambient>0.75 0.75 0.72 1</ambient>
-            <diffuse>0.9 0.9 0.86 1</diffuse>
-            <specular>0.05 0.05 0.05 1</specular>
-          </material>
-        </visual>
-      </link>
+
     </model>
 
-    <!--
-      Furniture layout for cleaning-robot navigation and coverage tests.
-      The central strip from the south entrance remains unobstructed.
-      All model origins are raised to z=0.1, the top of the finished floor.
-    -->
-
-    <!-- Living area: large obstacles and cleanable gaps. -->
-    <include>
-      <uri>model://sofa</uri>
-      <name>living_room_sofa</name>
-      <pose>-4.35 -2.2 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://coffeetable</uri>
-      <name>living_room_coffee_table</name>
-      <pose>-2.65 -2.2 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://bookshelf</uri>
-      <name>living_room_bookshelf</name>
-      <pose>-3.4 4.95 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-
-    <!-- Dining area: chair legs provide small, closely spaced obstacles. -->
-    <include>
-      <uri>model://table</uri>
-      <name>dining_table</name>
-      <pose>1.2 2.4 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://chair</uri>
-      <name>dining_chair_south</name>
-      <pose>1.2 1.35 0.1 0 0 1.5708</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://chair</uri>
-      <name>dining_chair_north</name>
-      <pose>1.2 3.45 0.1 0 0 -1.5708</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://chair</uri>
-      <name>dining_chair_west</name>
-      <pose>0.1 2.4 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://chair</uri>
-      <name>dining_chair_east</name>
-      <pose>2.3 2.4 0.1 0 0 3.14159</pose>
-      <static>true</static>
-    </include>
-
-    <!-- Bedroom area: low furniture and wall-following clearance. -->
-    <include>
-      <uri>model://normalbed</uri>
-      <name>bedroom_bed</name>
-      <pose>3.6 -3.75 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-
-    <!-- Kitchen area: an L-shaped cluster plus a freestanding bin. -->
-    <include>
-      <uri>model://kitchencountertop</uri>
-      <name>kitchen_countertop</name>
-      <pose>4.5 2.6 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://refrigerator</uri>
-      <name>kitchen_refrigerator</name>
-      <pose>4.45 4.35 0.1 0 0 0</pose>
-      <static>true</static>
-    </include>
-    <include>
-      <uri>model://trashbin</uri>
-      <name>kitchen_trash_bin</name>
-      <pose>3.55 3.75 0.1 0 0 -0.35</pose>
-      <static>true</static>
-    </include>
+    <!-- Open 5000 m^2 lawn for mowing, navigation, and coverage tests. -->
 
     <light name="sun" type="directional">
       <pose>0 0 10 0 0 0</pose>
