@@ -1,0 +1,704 @@
+<?xml version="1.0"?>
+<sdf version="1.10">
+  <world name="lawn_1000sqm">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <plugin name="gz::sim::systems::Physics" filename="gz-sim-physics-system"/>
+    <plugin name="gz::sim::systems::UserCommands" filename="gz-sim-user-commands-system"/>
+    <plugin name="gz::sim::systems::SceneBroadcaster" filename="gz-sim-scene-broadcaster-system"/>
+    <plugin name="gz::sim::systems::Contact" filename="gz-sim-contact-system"/>
+    <plugin name="gz::sim::systems::Sensors" filename="gz-sim-sensors-system">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name="gz::sim::systems::Imu" filename="gz-sim-imu-system"/>
+
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>5.5645e-06 2.28758e-05 -4.23884e-05</magnetic_field>
+    <atmosphere type="adiabatic"/>
+
+    <scene>
+      <ambient>0.5 0.5 0.5 1</ambient>
+      <background>0.55 0.75 0.95 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <!-- Sun -->
+    <light name="sun" type="directional">
+      <pose>0 0 20 0 0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1.0</intensity>
+      <direction>-0.4 0.2 -0.9</direction>
+      <diffuse>0.9 0.88 0.8 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <linear>0.005</linear>
+        <constant>0.95</constant>
+        <quadratic>0.0005</quadratic>
+      </attenuation>
+    </light>
+
+    <!-- Ground plane (extends beyond the lawn) -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>80 60</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>80 60</size></plane></geometry>
+          <material>
+            <ambient>0.25 0.20 0.12 1</ambient>
+            <diffuse>0.35 0.28 0.15 1</diffuse>
+            <specular>0.02 0.02 0.02 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!--
+      Lawn area: 40 m x 25 m = 1000 m²
+      Origin at center of lawn.
+      Boundary fence height: 1.2 m (typical residential fence)
+    -->
+    <model name="lawn_1000sqm">
+      <static>true</static>
+
+      <!-- Grass floor 40m x 25m -->
+      <link name="grass">
+        <pose>0 0 0.025 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>40 25 0.05</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>40 25 0.05</size></box></geometry>
+          <material>
+            <ambient>0.10 0.32 0.06 1</ambient>
+            <diffuse>0.15 0.50 0.10 1</diffuse>
+            <specular>0.08 0.08 0.08 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- ===== Boundary fence (wood style, 1.2m high, 0.1m thick) ===== -->
+      <!-- North fence -->
+      <link name="fence_north">
+        <pose>0 12.55 0.6 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>40.2 0.1 1.2</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>40.2 0.1 1.2</size></box></geometry>
+          <material>
+            <ambient>0.45 0.30 0.15 1</ambient>
+            <diffuse>0.60 0.40 0.20 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- South fence (split for 2m gate opening, centered) -->
+      <link name="fence_south_left">
+        <pose>-10.5 -12.55 0.6 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>19 0.1 1.2</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>19 0.1 1.2</size></box></geometry>
+          <material>
+            <ambient>0.45 0.30 0.15 1</ambient>
+            <diffuse>0.60 0.40 0.20 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+      <link name="fence_south_right">
+        <pose>10.5 -12.55 0.6 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>19 0.1 1.2</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>19 0.1 1.2</size></box></geometry>
+          <material>
+            <ambient>0.45 0.30 0.15 1</ambient>
+            <diffuse>0.60 0.40 0.20 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- West fence -->
+      <link name="fence_west">
+        <pose>-20.05 0 0.6 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.1 25 1.2</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.1 25 1.2</size></box></geometry>
+          <material>
+            <ambient>0.45 0.30 0.15 1</ambient>
+            <diffuse>0.60 0.40 0.20 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- East fence -->
+      <link name="fence_east">
+        <pose>20.05 0 0.6 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.1 25 1.2</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.1 25 1.2</size></box></geometry>
+          <material>
+            <ambient>0.45 0.30 0.15 1</ambient>
+            <diffuse>0.60 0.40 0.20 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Obstacles: Trees (cylindrical trunks + sphere canopy) ===== -->
+
+    <!-- Tree 1: large oak, northwest area -->
+    <model name="tree_1">
+      <static>true</static>
+      <link name="trunk">
+        <pose>-12 8 0.75 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.2</radius><length>1.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.2</radius><length>1.5</length></cylinder></geometry>
+          <material>
+            <ambient>0.30 0.18 0.08 1</ambient>
+            <diffuse>0.45 0.25 0.10 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="canopy">
+        <pose>-12 8 2.2 0 0 0</pose>
+        <visual name="visual">
+          <geometry><sphere><radius>1.8</radius></sphere></geometry>
+          <material>
+            <ambient>0.08 0.30 0.05 1</ambient>
+            <diffuse>0.12 0.45 0.08 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tree 2: medium tree, northeast -->
+    <model name="tree_2">
+      <static>true</static>
+      <link name="trunk">
+        <pose>14 9 0.6 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.15</radius><length>1.2</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.15</radius><length>1.2</length></cylinder></geometry>
+          <material>
+            <ambient>0.30 0.18 0.08 1</ambient>
+            <diffuse>0.45 0.25 0.10 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="canopy">
+        <pose>14 9 1.8 0 0 0</pose>
+        <visual name="visual">
+          <geometry><sphere><radius>1.4</radius></sphere></geometry>
+          <material>
+            <ambient>0.06 0.28 0.04 1</ambient>
+            <diffuse>0.10 0.42 0.07 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tree 3: small ornamental tree, center-west -->
+    <model name="tree_3">
+      <static>true</static>
+      <link name="trunk">
+        <pose>-8 -3 0.5 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.1</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.1</radius><length>1.0</length></cylinder></geometry>
+          <material>
+            <ambient>0.30 0.18 0.08 1</ambient>
+            <diffuse>0.45 0.25 0.10 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="canopy">
+        <pose>-8 -3 1.5 0 0 0</pose>
+        <visual name="visual">
+          <geometry><sphere><radius>1.0</radius></sphere></geometry>
+          <material>
+            <ambient>0.10 0.35 0.06 1</ambient>
+            <diffuse>0.15 0.50 0.10 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tree 4: fruit tree, southeast -->
+    <model name="tree_4">
+      <static>true</static>
+      <link name="trunk">
+        <pose>12 -7 0.55 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.12</radius><length>1.1</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.12</radius><length>1.1</length></cylinder></geometry>
+          <material>
+            <ambient>0.30 0.18 0.08 1</ambient>
+            <diffuse>0.45 0.25 0.10 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="canopy">
+        <pose>12 -7 1.6 0 0 0</pose>
+        <visual name="visual">
+          <geometry><sphere><radius>1.2</radius></sphere></geometry>
+          <material>
+            <ambient>0.08 0.32 0.05 1</ambient>
+            <diffuse>0.12 0.48 0.08 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Flower beds (rectangular raised borders, impassable) ===== -->
+
+    <!-- Flower bed 1: L-shaped garden near north fence -->
+    <model name="flower_bed_1">
+      <static>true</static>
+      <link name="bed_long">
+        <pose>5 10.5 0.15 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>4.0 1.5 0.3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>4.0 1.5 0.3</size></box></geometry>
+          <material>
+            <ambient>0.25 0.12 0.05 1</ambient>
+            <diffuse>0.40 0.20 0.08 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="bed_short">
+        <pose>7.5 9.0 0.15 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>1.0 1.5 0.3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.0 1.5 0.3</size></box></geometry>
+          <material>
+            <ambient>0.25 0.12 0.05 1</ambient>
+            <diffuse>0.40 0.20 0.08 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Flower bed 2: circular garden, center area -->
+    <model name="flower_bed_2">
+      <static>true</static>
+      <link name="bed">
+        <pose>0 2 0.15 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>1.2</radius><length>0.3</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>1.2</radius><length>0.3</length></cylinder></geometry>
+          <material>
+            <ambient>0.22 0.10 0.04 1</ambient>
+            <diffuse>0.38 0.18 0.07 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Flower bed 3: rectangular along east fence -->
+    <model name="flower_bed_3">
+      <static>true</static>
+      <link name="bed">
+        <pose>18.5 0 0.15 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>1.5 8.0 0.3</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.5 8.0 0.3</size></box></geometry>
+          <material>
+            <ambient>0.25 0.12 0.05 1</ambient>
+            <diffuse>0.40 0.20 0.08 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Garden furniture / obstacles ===== -->
+
+    <!-- Patio table with 4 legs -->
+    <model name="patio_table">
+      <static>true</static>
+      <link name="tabletop">
+        <pose>-15 -8 0.7 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.6</radius><length>0.05</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.6</radius><length>0.05</length></cylinder></geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="leg">
+        <pose>-15 -8 0.35 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.04</radius><length>0.7</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.04</radius><length>0.7</length></cylinder></geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Garden bench -->
+    <model name="garden_bench">
+      <static>true</static>
+      <link name="seat">
+        <pose>-16 4 0.25 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>1.5 0.4 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.5 0.4 0.5</size></box></geometry>
+          <material>
+            <ambient>0.35 0.22 0.10 1</ambient>
+            <diffuse>0.50 0.30 0.15 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Charging station (home base) near south gate ===== -->
+    <model name="charging_station">
+      <static>true</static>
+      <link name="base">
+        <pose>0 -11.5 0.05 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.6 0.4 0.1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 0.4 0.1</size></box></geometry>
+          <material>
+            <ambient>0.15 0.15 0.15 1</ambient>
+            <diffuse>0.25 0.25 0.25 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="canopy_post">
+        <pose>0 -11.7 0.2 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.6 0.05 0.4</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 0.05 0.4</size></box></geometry>
+          <material>
+            <ambient>0.15 0.15 0.15 1</ambient>
+            <diffuse>0.25 0.25 0.25 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Narrow passage 1: two pillars creating a 1m gap (garden arch) ===== -->
+    <model name="narrow_passage_1m">
+      <static>true</static>
+      <link name="pillar_left">
+        <pose>6 -4 0.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.3 0.3 0.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.3 0.3 0.8</size></box></geometry>
+          <material>
+            <ambient>0.6 0.6 0.55 1</ambient>
+            <diffuse>0.75 0.75 0.70 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="pillar_right">
+        <pose>6 -5.3 0.4 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.3 0.3 0.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.3 0.3 0.8</size></box></geometry>
+          <material>
+            <ambient>0.6 0.6 0.55 1</ambient>
+            <diffuse>0.75 0.75 0.70 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Narrow corridor: 60cm wide, 3m long (simulating house side-passage) ===== -->
+    <model name="narrow_corridor_60cm">
+      <static>true</static>
+      <link name="wall_left">
+        <pose>-18.5 -4 0.5 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.15 3.0 1.0</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.15 3.0 1.0</size></box></geometry>
+          <material>
+            <ambient>0.55 0.55 0.52 1</ambient>
+            <diffuse>0.70 0.70 0.65 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <link name="wall_right">
+        <pose>-17.75 -4 0.5 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>0.15 3.0 1.0</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.15 3.0 1.0</size></box></geometry>
+          <material>
+            <ambient>0.55 0.55 0.52 1</ambient>
+            <diffuse>0.70 0.70 0.65 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Rock / boulder obstacles ===== -->
+    <model name="rock_1">
+      <static>true</static>
+      <link name="rock">
+        <pose>-4 6 0.15 0.1 0.05 0.3</pose>
+        <collision name="collision">
+          <geometry><sphere><radius>0.3</radius></sphere></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><sphere><radius>0.3</radius></sphere></geometry>
+          <material>
+            <ambient>0.4 0.4 0.38 1</ambient>
+            <diffuse>0.55 0.55 0.50 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="rock_2">
+      <static>true</static>
+      <link name="rock">
+        <pose>16 5 0.12 -0.05 0.1 0.7</pose>
+        <collision name="collision">
+          <geometry><sphere><radius>0.25</radius></sphere></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><sphere><radius>0.25</radius></sphere></geometry>
+          <material>
+            <ambient>0.45 0.42 0.38 1</ambient>
+            <diffuse>0.58 0.55 0.50 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Sandbox (kids play area, impassable) ===== -->
+    <model name="sandbox">
+      <static>true</static>
+      <link name="box">
+        <pose>-5 -9 0.1 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>2.0 2.0 0.2</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>2.0 2.0 0.2</size></box></geometry>
+          <material>
+            <ambient>0.6 0.55 0.35 1</ambient>
+            <diffuse>0.75 0.70 0.45 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Garden hose (low obstacle, line on ground) ===== -->
+    <model name="garden_hose">
+      <static>true</static>
+      <link name="hose">
+        <pose>8 3 0.02 0 0 0.4</pose>
+        <collision name="collision">
+          <geometry><box><size>5.0 0.04 0.04</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>5.0 0.04 0.04</size></box></geometry>
+          <material>
+            <ambient>0.1 0.5 0.1 1</ambient>
+            <diffuse>0.15 0.7 0.15 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Stepping stones (path across lawn) ===== -->
+    <model name="stepping_stone_1">
+      <static>true</static>
+      <link name="stone">
+        <pose>-2 -5 0.025 0 0 0.2</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.2</radius><length>0.05</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.2</radius><length>0.05</length></cylinder></geometry>
+          <material>
+            <ambient>0.5 0.5 0.48 1</ambient>
+            <diffuse>0.65 0.65 0.60 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="stepping_stone_2">
+      <static>true</static>
+      <link name="stone">
+        <pose>-1.2 -5.8 0.025 0 0 -0.1</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.2</radius><length>0.05</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.2</radius><length>0.05</length></cylinder></geometry>
+          <material>
+            <ambient>0.5 0.5 0.48 1</ambient>
+            <diffuse>0.65 0.65 0.60 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="stepping_stone_3">
+      <static>true</static>
+      <link name="stone">
+        <pose>-0.3 -6.5 0.025 0 0 0.3</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.2</radius><length>0.05</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.2</radius><length>0.05</length></cylinder></geometry>
+          <material>
+            <ambient>0.5 0.5 0.48 1</ambient>
+            <diffuse>0.65 0.65 0.60 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Sprinkler heads (low ground obstacles, barely visible) ===== -->
+    <model name="sprinkler_1">
+      <static>true</static>
+      <link name="head">
+        <pose>-10 3 0.03 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.05</radius><length>0.06</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.05</radius><length>0.06</length></cylinder></geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="sprinkler_2">
+      <static>true</static>
+      <link name="head">
+        <pose>10 7 0.03 0 0 0</pose>
+        <collision name="collision">
+          <geometry><cylinder><radius>0.05</radius><length>0.06</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.05</radius><length>0.06</length></cylinder></geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Fallen branch (temporary obstacle on grass) ===== -->
+    <model name="fallen_branch">
+      <static>true</static>
+      <link name="branch">
+        <pose>3 5 0.025 0 0 0.8</pose>
+        <collision name="collision">
+          <geometry><box><size>1.2 0.05 0.05</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.2 0.05 0.05</size></box></geometry>
+          <material>
+            <ambient>0.30 0.18 0.08 1</ambient>
+            <diffuse>0.42 0.24 0.10 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Child's toy (small random obstacle) ===== -->
+    <model name="toy_ball">
+      <static>true</static>
+      <link name="ball">
+        <pose>-3 1 0.08 0 0 0</pose>
+        <collision name="collision">
+          <geometry><sphere><radius>0.08</radius></sphere></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><sphere><radius>0.08</radius></sphere></geometry>
+          <material>
+            <ambient>0.8 0.2 0.2 1</ambient>
+            <diffuse>0.95 0.3 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Lawn edge stones (border between grass and flower bed) ===== -->
+    <model name="edge_stones">
+      <static>true</static>
+      <link name="stones">
+        <pose>0 3.5 0.04 0 0 0</pose>
+        <collision name="collision">
+          <geometry><box><size>3.0 0.12 0.08</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>3.0 0.12 0.08</size></box></geometry>
+          <material>
+            <ambient>0.5 0.48 0.44 1</ambient>
+            <diffuse>0.62 0.60 0.55 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
